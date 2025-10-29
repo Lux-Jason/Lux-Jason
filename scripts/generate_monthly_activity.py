@@ -12,6 +12,7 @@ import os
 import sys
 import datetime
 from collections import Counter
+import warnings
 
 # PyGithub import with Auth token support (avoid DeprecationWarning where possible)
 try:
@@ -38,12 +39,24 @@ if not REPO or not TOKEN:
     sys.exit(1)
 
 # Authenticate using recommended Auth.Token if available
-if "Auth" in globals() and Auth is not None:
-    gh = Github(auth=Auth.Token(TOKEN))
-else:
-    gh = Github(TOKEN)
+try:
+    if "Auth" in globals() and Auth is not None and hasattr(Auth, "Token"):
+        gh = Github(auth=Auth.Token(TOKEN))
+        print("Authenticated GitHub via Auth.Token")
+    else:
+        # fallback: older constructor (may emit DeprecationWarning on some versions)
+        gh = Github(TOKEN)
+        print("Authenticated GitHub via fallback constructor")
+except Exception as e:
+    print("GitHub authentication failed:", e, file=sys.stderr)
+    sys.exit(1)
 
-repo = gh.get_repo(REPO)
+try:
+    repo = gh.get_repo(REPO)
+except Exception as e:
+    print(f"Failed to open repository {REPO}: {e}", file=sys.stderr)
+    sys.exit(1)
+
 print(f"Generating monthly activity for repository: {REPO}")
 
 # Compute month labels (YYYY-MM) for the last MONTHS months including current month
@@ -80,24 +93,40 @@ available_styles = plt.style.available
 print("Available matplotlib styles:", available_styles)
 
 # Pick a safe, always-available matplotlib style (no seaborn dependency)
-for s in ["ggplot", "fivethirtyeight", "classic", "default"]:
+preferred = ["ggplot", "fivethirtyeight", "classic", "default"]
+used_style = None
+for s in preferred:
     if s in available_styles:
-        plt.style.use(s)
-        print("Using matplotlib style:", s)
-        break
-else:
-    print("No preferred style available; using matplotlib default")
+        try:
+            plt.style.use(s)
+            used_style = s
+            print("Using matplotlib style:", s)
+            break
+        except Exception as e:
+            print("Failed to apply style", s, ":", e)
+if used_style is None:
+    print("No preferred style available; using matplotlib defaults (no style applied)")
 
 # Plot
 fig, ax = plt.subplots(figsize=(10, 4))
-bars = ax.bar(months, ordered_counts, color="#2b6cb0")
+
+x_pos = list(range(len(months)))
+bars = ax.bar(x_pos, ordered_counts, color="#2b6cb0")
+
 ax.set_title(f"Monthly Activity (commits) — last {MONTHS} months")
 ax.set_ylabel("Commits")
 ax.set_xlabel("Month")
+ax.set_xticks(x_pos)
 ax.set_xticklabels(months, rotation=45, ha="right")
-# annotate bars
+
+# annotate bars (avoid overlapping when value == 0)
 for rect, val in zip(bars, ordered_counts):
-    ax.text(rect.get_x() + rect.get_width() / 2, rect.get_height(), str(val), ha="center", va="bottom", fontsize=8)
+    y = rect.get_height()
+    if y == 0:
+        y_text = 0.5  # small offset so the '0' is visible
+    else:
+        y_text = y
+    ax.text(rect.get_x() + rect.get_width() / 2, y_text, str(val), ha="center", va="bottom", fontsize=8)
 
 plt.tight_layout()
 os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
