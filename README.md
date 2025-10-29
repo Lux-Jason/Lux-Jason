@@ -52,10 +52,6 @@ COVID-19 data analysis project
 <!-- Top languages -->
 ![Language Stats](https://github-readme-stats.vercel.app/api/top-langs/?username=Lux-Jason&layout=compact&theme=radical&cache_seconds=21600)
 
-<!-- Activity graph -->
-![Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=Lux-Jason&theme=github-compact)
-![Monthly Activity](https://raw.githubusercontent.com/Lux-Jason/Lux-Jason/main/assets/monthly-activity.png)
-
 </div>
 
 ## Core Technologies
