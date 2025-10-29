@@ -17,21 +17,13 @@ from collections import Counter
 try:
     from github import Github, Auth
 except Exception:
-    # older PyGithub may not have Auth; fallback to simple Github(token)
     from github import Github  # type: ignore
     Auth = None  # type: ignore
 
-# Use non-interactive backend before importing pyplot
+# Use non-interactive backend before importing pyplot (required in CI)
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
-# Try to import seaborn for nicer styles; if not installed, fallback to available styles
-try:
-    import seaborn as sns  # optional; improves visuals and provides seaborn styles
-    HAS_SEABORN = True
-except Exception:
-    HAS_SEABORN = False
 
 from dateutil.relativedelta import relativedelta
 
@@ -54,14 +46,14 @@ else:
 repo = gh.get_repo(REPO)
 print(f"Generating monthly activity for repository: {REPO}")
 
-# compute month labels (YYYY-MM) for the last MONTHS months including current month
+# Compute month labels (YYYY-MM) for the last MONTHS months including current month
 now = datetime.datetime.utcnow().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 months = []
 for i in range(MONTHS - 1, -1, -1):
     m = now - relativedelta(months=i)
     months.append(m.strftime("%Y-%m"))
 
-# list commits since earliest month start
+# List commits since earliest month start
 earliest = now - relativedelta(months=MONTHS - 1)
 print("Fetching commits since:", earliest.isoformat())
 commits = repo.get_commits(since=earliest)
@@ -80,35 +72,16 @@ for c in commits:
         counts[ym] += 1
 print(f"Fetched {fetched} commits (counted {sum(counts.values())} in range)")
 
-# ensure zero for months without commits
+# Ensure zero for months without commits
 ordered_counts = [counts.get(m, 0) for m in months]
 
-# Apply seaborn theme if seaborn available; otherwise use a safe available matplotlib style
-if HAS_SEABORN:
-    try:
-        sns.set_theme(style="darkgrid")
-        print("Using seaborn theme: darkgrid")
-    except Exception:
-        print("seaborn import succeeded but set_theme failed; falling back to matplotlib styles")
-        HAS_SEABORN = False
-
-if not HAS_SEABORN:
-    available = plt.style.available
-    preferred = [
-        "seaborn-darkgrid",
-        "seaborn-v0_8-darkgrid",
-        "seaborn",
-        "ggplot",
-        "fivethirtyeight",
-        "default",
-    ]
-    for s in preferred:
-        if s in available:
-            plt.style.use(s)
-            print("Using matplotlib style:", s)
-            break
-    else:
-        print("No preferred style available; using matplotlib default")
+# Pick a safe, always-available matplotlib style (no seaborn dependency)
+available = set(plt.style.available)
+for s in ["ggplot", "fivethirtyeight", "default"]:
+    if s in available:
+        plt.style.use(s)
+        print("Using matplotlib style:", s)
+        break
 
 # Plot
 fig, ax = plt.subplots(figsize=(10, 4))
