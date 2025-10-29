@@ -1,11 +1,11 @@
 ## Research & Technical Interests
 
-- **Algorithms & Data Structures**: From basic C implementations to advanced structures
-- **Machine Learning**: Supervised/unsupervised learning, NLP applications
-- **Database Systems**: Web development and management practices
-- **Climate Data Analysis**: ERA5 dataset processing and trend analysis  
-- **Cryptography**: DES/AES/RSA implementations and applications
-- **AI Ethics**: Philosophical and legal considerations
+- **Algorithms & Data Structures**: From fundamental C implementations to advanced data structures and algorithm design
+- **Machine Learning**: Supervised and unsupervised methods, model evaluation, and NLP applications
+- **Database Systems**: Web database design, performance tuning, and management practices
+- **Climate Data Analysis**: ERA5 dataset processing, time-series analysis, and trend detection  
+- **Cryptography**: Implementations and applications of DES, AES, RSA
+- **AI Ethics**: Philosophical, legal, and practical considerations for responsible AI
 
 ## Featured Projects
 
@@ -16,27 +16,24 @@ Comprehensive C projects including:
 - Data structures (Linked Lists, Stacks, Queues)
 - Cryptography (DES/AES/RSA implementations)
 - Network programming examples  
-`C` `Algorithms` `Cryptography`  
+`C` `Algorithms` `Cryptography`
 
-
+#### [Sentiment-Emotion-NLP10](https://github.com/Lux-Jason/Sentiment-Emotion-NLP10)
+NLP group project: sentiment and emotion analysis  
+`Python` `NLP` `Text Classification`
 
 #### [ERA5_2m_tem](https://github.com/Lux-Jason/ERA5_2m_tem)
-China region temperature analysis (1950-2023)  
+China regional temperature analysis (1950–2023)  
 `Python` `Pandas` `Climate Analysis`  
-
-
 
 ### Web & Systems
 #### [DBMS](https://github.com/Lux-Jason/DBMS)
 Web-based Database Management System  
 `PHP` `MySQL` `Query Optimization`  
 
-
 #### [RMS](https://github.com/Lux-Jason/RMS)
 Resource Management System  
 `PHP` `MySQL` `Bootstrap`  
-
-
 
 ### Development Projects
 
@@ -46,18 +43,21 @@ Pokémon dataset analysis
 
 #### [DPW_COVID_19](https://github.com/Lux-Jason/DPW_COVID_19)
 COVID-19 data analysis project  
-`Python`  `Data Analysis` `Visualization`
-
-
+`Python` `Data Analysis` `Visualization`
 
 ## Stats
 
-<!-- Dynamic content will be updated by GitHub Actions -->
 <div align="center">
-  
-![Language Stats](https://github-readme-stats.vercel.app/api/top-langs/?username=Lux-Jason&layout=compact&theme=radical)
 
-![Project Activity](https://activity-graph.herokuapp.com/graph?username=Lux-Jason&theme=github)
+<!-- Top languages -->
+![Language Stats](https://github-readme-stats.vercel.app/api/top-langs/?username=Lux-Jason&layout=compact&theme=radical&cache_seconds=21600)
+
+<!-- GitHub overall stats -->
+![GitHub Stats](https://github-readme-stats.vercel.app/api?username=Lux-Jason&show_icons=true&theme=radical&cache_seconds=21600)
+
+<!-- Activity graph (migrated from herokuapp to vercel app) -->
+![Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=Lux-Jason&theme=github-compact)
+
 </div>
 
 ## Core Technologies
@@ -65,5 +65,4 @@ COVID-19 data analysis project
 **AI/ML**: ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?logo=tensorflow) ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch)  
 **Data**: ![Python](https://img.shields.io/badge/Python-3776AB?logo=python) ![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas)  
 **Web**: ![PHP](https://img.shields.io/badge/PHP-777BB4?logo=php) ![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql)  
-**Crypto**: ![C](https://img.shields.io/badge/C-00599C?logo=c) ![OpenSSL](https://img.shields.io/badge/OpenSSL-721412?logo=openssl) 
-
+**Crypto**: ![C](https://img.shields.io/badge/C-00599C?logo=c) ![OpenSSL](https://img.shields.io/badge/OpenSSL-721412?logo=openssl)
