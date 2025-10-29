@@ -13,7 +13,7 @@ import sys
 import datetime
 from collections import Counter
 
-# PyGithub import with Auth token support (avoid DeprecationWarning)
+# PyGithub import with Auth token support (avoid DeprecationWarning where possible)
 try:
     from github import Github, Auth
 except Exception:
@@ -75,13 +75,18 @@ print(f"Fetched {fetched} commits (counted {sum(counts.values())} in range)")
 # Ensure zero for months without commits
 ordered_counts = [counts.get(m, 0) for m in months]
 
+# Debug: print available matplotlib styles
+available_styles = plt.style.available
+print("Available matplotlib styles:", available_styles)
+
 # Pick a safe, always-available matplotlib style (no seaborn dependency)
-available = set(plt.style.available)
-for s in ["ggplot", "fivethirtyeight", "default"]:
-    if s in available:
+for s in ["ggplot", "fivethirtyeight", "classic", "default"]:
+    if s in available_styles:
         plt.style.use(s)
         print("Using matplotlib style:", s)
         break
+else:
+    print("No preferred style available; using matplotlib default")
 
 # Plot
 fig, ax = plt.subplots(figsize=(10, 4))
