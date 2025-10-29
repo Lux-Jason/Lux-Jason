@@ -26,6 +26,13 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+# Try to import seaborn for nicer styles; if not installed, fallback to available styles
+try:
+    import seaborn as sns  # optional; improves visuals and provides seaborn styles
+    HAS_SEABORN = True
+except Exception:
+    HAS_SEABORN = False
+
 from dateutil.relativedelta import relativedelta
 
 # Config
@@ -38,11 +45,10 @@ if not REPO or not TOKEN:
     print("Error: GITHUB_REPOSITORY and GITHUB_TOKEN must be set in the environment", file=sys.stderr)
     sys.exit(1)
 
-# Authenticate using preferred method
+# Authenticate using recommended Auth.Token if available
 if "Auth" in globals() and Auth is not None:
     gh = Github(auth=Auth.Token(TOKEN))
 else:
-    # fallback (works but may raise deprecation warning on some versions)
     gh = Github(TOKEN)
 
 repo = gh.get_repo(REPO)
@@ -77,23 +83,32 @@ print(f"Fetched {fetched} commits (counted {sum(counts.values())} in range)")
 # ensure zero for months without commits
 ordered_counts = [counts.get(m, 0) for m in months]
 
-# Choose a plotting style with fallbacks to available styles
-available = plt.style.available
-preferred = [
-    "seaborn-darkgrid",
-    "seaborn-v0_8-darkgrid",
-    "seaborn",
-    "ggplot",
-    "fivethirtyeight",
-    "default",
-]
-for s in preferred:
-    if s in available:
-        plt.style.use(s)
-        print("Using matplotlib style:", s)
-        break
-else:
-    print("No preferred style available; using matplotlib default")
+# Apply seaborn theme if seaborn available; otherwise use a safe available matplotlib style
+if HAS_SEABORN:
+    try:
+        sns.set_theme(style="darkgrid")
+        print("Using seaborn theme: darkgrid")
+    except Exception:
+        print("seaborn import succeeded but set_theme failed; falling back to matplotlib styles")
+        HAS_SEABORN = False
+
+if not HAS_SEABORN:
+    available = plt.style.available
+    preferred = [
+        "seaborn-darkgrid",
+        "seaborn-v0_8-darkgrid",
+        "seaborn",
+        "ggplot",
+        "fivethirtyeight",
+        "default",
+    ]
+    for s in preferred:
+        if s in available:
+            plt.style.use(s)
+            print("Using matplotlib style:", s)
+            break
+    else:
+        print("No preferred style available; using matplotlib default")
 
 # Plot
 fig, ax = plt.subplots(figsize=(10, 4))
